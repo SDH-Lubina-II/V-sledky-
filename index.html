@@ -310,8 +310,63 @@ d.poradi="NP";
 
 function vykresliMPU(){
 
-document.getElementById("mpuObsah").innerHTML =
-"<p>MPU připraveno</p>";
+let html = `
+<table><tr>
+<th>Start</th>
+<th>Pořadí</th>
+<th>Družstvo</th>
+<th>LP</th>
+<th>PP</th>
+<th>Výsledek</th>
+<th>NP</th>
+</tr>
+`;
+
+mladsiPU.forEach((d,i)=>{
+
+html += `
+<tr>
+<td>${d.start}</td>
+<td>${d.poradi || ""}</td>
+<td>${d.druzstvo}</td>
+
+<td>
+<input
+value="${d.lp}"
+onchange="
+mladsiPU[${i}].lp=this.value;
+prepocetMPU();
+">
+</td>
+
+<td>
+<input
+value="${d.pp}"
+onchange="
+mladsiPU[${i}].pp=this.value;
+prepocetMPU();
+">
+</td>
+
+<td>${d.vysledek}</td>
+
+<td>
+<input
+type="checkbox"
+${d.np ? "checked" : ""}
+onchange="
+mladsiPU[${i}].np=this.checked;
+prepocetMPU();
+">
+</td>
+</tr>
+`;
+
+});
+
+html += "</table>";
+
+document.getElementById("mpuObsah").innerHTML = html;
 
 }
 function casNaCislo(cas){
