@@ -1,1 +1,201 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Výsledky SDH</title>
 
+<style>
+body{
+font-family:Arial,sans-serif;
+margin:20px;
+background:#f5f5f5;
+}
+
+h1,h2,h3{
+margin-top:20px;
+}
+
+input,button,textarea{
+padding:8px;
+margin:4px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+background:white;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:6px;
+text-align:center;
+}
+
+th{
+background:#eaeaea;
+}
+
+.section{
+background:white;
+padding:15px;
+margin-bottom:20px;
+border-radius:8px;
+}
+
+.hidden{
+display:none;
+}
+
+textarea{
+width:100%;
+height:120px;
+}
+
+.nav button{
+margin-right:10px;
+}
+</style>
+</head>
+<body>
+
+<h1>Výsledky SDH</h1>
+
+<div class="section">
+<h2>Nastavení soutěže</h2>
+
+<label>Název soutěže:</label><br>
+<input id="nazevSouteze" style="width:300px"><br>
+
+<label>Datum:</label><br>
+<input type="date" id="datumSouteze">
+</div>
+
+<div class="nav">
+<button onclick="showPage('spu')">Starší - Požární útok</button>
+<button onclick="showPage('ssd')">Starší - Štafeta dvojic</button>
+<button onclick="showPage('mpu')">Mladší - Požární útok</button>
+<button onclick="showPage('msd')">Mladší - Štafeta dvojic</button>
+</div>
+
+<div id="spu" class="section">
+<h2>Starší - Požární útok</h2>
+
+<h3>Hromadné vložení družstev</h3>
+
+<textarea id="spuImport"></textarea><br>
+<button onclick="importSPU()">Importovat družstva</button>
+
+<div id="spuObsah"></div>
+</div>
+
+<div id="ssd" class="section hidden">
+<h2>Starší - Štafeta dvojic</h2>
+
+<textarea id="ssdImport" placeholder="Jan;Novák;Kopřivnice"></textarea><br>
+<button>Importovat závodníky</button>
+
+<div id="ssdObsah"></div>
+</div>
+
+<div id="mpu" class="section hidden">
+<h2>Mladší - Požární útok</h2>
+
+<textarea id="mpuImport"></textarea><br>
+<button>Importovat družstva</button>
+
+<div id="mpuObsah"></div>
+</div>
+
+<div id="msd" class="section hidden">
+<h2>Mladší - Štafeta dvojic</h2>
+
+<textarea id="msdImport"></textarea><br>
+<button>Importovat závodníky</button>
+
+<div id="msdObsah"></div>
+</div>
+
+<script>
+
+let starsiPU=[];
+
+function showPage(id){
+
+document.querySelectorAll('.section').forEach(x=>{
+if(
+x.id==="spu"||
+x.id==="ssd"||
+x.id==="mpu"||
+x.id==="msd"
+){
+x.classList.add("hidden");
+}
+});
+
+document.getElementById(id).classList.remove("hidden");
+}
+
+function importSPU(){
+
+const text=document.getElementById("spuImport").value;
+
+const radky=text.split("\\n");
+
+radky.forEach((nazev,index)=>{
+
+if(nazev.trim()!==""){
+
+starsiPU.push({
+start: starsiPU.length+1,
+druzstvo:nazev.trim(),
+lp:"",
+pp:"",
+np:false
+});
+
+}
+
+});
+
+vykresliSPU();
+}
+
+function vykresliSPU(){
+
+let html=`
+<table>
+<tr>
+<th>Start</th>
+<th>Družstvo</th>
+<th>LP</th>
+<th>PP</th>
+<th>NP</th>
+</tr>
+`;
+
+starsiPU.forEach((d,i)=>{
+
+html+=`
+<tr>
+<td>${d.start}</td>
+<td>${d.druzstvo}</td>
+<td><input></td>
+<td><input></td>
+<td><input type="checkbox"></td>
+</tr>
+`;
+
+});
+
+html+="</table>";
+
+document.getElementById("spuObsah").innerHTML=html;
+}
+
+</script>
+
+</body>
+</html>
