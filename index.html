@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Výsledky SDH</title>
 
 <style>
+
 body{
 font-family:Arial,sans-serif;
 margin:20px;
@@ -16,9 +18,27 @@ h1,h2,h3{
 margin-top:20px;
 }
 
-input,button,textarea{
-padding:8px;
-margin:4px;
+.section{
+background:white;
+padding:15px;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+button{
+padding:8px 12px;
+margin:3px;
+cursor:pointer;
+}
+
+input,textarea{
+padding:6px;
+margin:3px;
+}
+
+textarea{
+width:100%;
+height:120px;
 }
 
 table{
@@ -35,87 +55,112 @@ text-align:center;
 }
 
 th{
-background:#eaeaea;
-}
-
-.section{
-background:white;
-padding:15px;
-margin-bottom:20px;
-border-radius:8px;
+background:#ececec;
 }
 
 .hidden{
 display:none;
 }
 
-textarea{
-width:100%;
-height:120px;
+.poradi1{
+background:#ffd700;
 }
 
-.nav button{
-margin-right:10px;
+.poradi2{
+background:#d9d9d9;
 }
+
+.poradi3{
+background:#f4b183;
+}
+
 </style>
+
 </head>
 <body>
 
 <h1>Výsledky SDH</h1>
 
 <div class="section">
+
 <h2>Nastavení soutěže</h2>
 
-<label>Název soutěže:</label><br>
+<label>Název soutěže</label><br>
 <input id="nazevSouteze" style="width:300px"><br>
 
-<label>Datum:</label><br>
+<label>Datum</label><br>
 <input type="date" id="datumSouteze">
+
 </div>
 
-<div class="nav">
-<button onclick="showPage('spu')">Starší - Požární útok</button>
-<button onclick="showPage('ssd')">Starší - Štafeta dvojic</button>
-<button onclick="showPage('mpu')">Mladší - Požární útok</button>
-<button onclick="showPage('msd')">Mladší - Štafeta dvojic</button>
+<div class="section">
+
+<button onclick="showPage('spu')">
+Starší - Požární útok
+</button>
+
+<button onclick="showPage('mpu')">
+Mladší - Požární útok
+</button>
+
+<button onclick="showPage('ssd')">
+Starší - Štafeta dvojic
+</button>
+
+<button onclick="showPage('msd')">
+Mladší - Štafeta dvojic
+</button>
+
 </div>
 
 <div id="spu" class="section">
+
 <h2>Starší - Požární útok</h2>
 
-<h3>Hromadné vložení družstev</h3>
+<h3>Import družstev</h3>
 
-<textarea id="spuImport"></textarea><br>
-<button onclick="importSPU()">Importovat družstva</button>
+<textarea id="spuImport"></textarea>
+
+<br>
+
+<button onclick="importSPU()">
+Importovat družstva
+</button>
 
 <div id="spuObsah"></div>
-</div>
 
-<div id="ssd" class="section hidden">
-<h2>Starší - Štafeta dvojic</h2>
-
-<textarea id="ssdImport" placeholder="Jan;Novák;Kopřivnice"></textarea><br>
-<button>Importovat závodníky</button>
-
-<div id="ssdObsah"></div>
 </div>
 
 <div id="mpu" class="section hidden">
+
 <h2>Mladší - Požární útok</h2>
 
-<textarea id="mpuImport"></textarea><br>
-<button>Importovat družstva</button>
+<textarea id="mpuImport"></textarea>
+
+<br>
+
+<button>
+Importovat družstva
+</button>
 
 <div id="mpuObsah"></div>
+
+</div>
+
+<div id="ssd" class="section hidden">
+
+<h2>Starší - Štafeta dvojic</h2>
+
+<div id="ssdObsah"></div>
+
 </div>
 
 <div id="msd" class="section hidden">
+
 <h2>Mladší - Štafeta dvojic</h2>
 
-<textarea id="msdImport"></textarea><br>
-<button>Importovat závodníky</button>
-
 <div id="msdObsah"></div>
+
 </div>
 
 <script>
@@ -124,128 +169,150 @@ let starsiPU=[];
 
 function showPage(id){
 
-document.querySelectorAll('.section').forEach(x=>{
-if(
-x.id==="spu"||
-x.id==="ssd"||
-x.id==="mpu"||
-x.id==="msd"
-){
-x.classList.add("hidden");
-}
-});
+document
+.querySelectorAll("#spu,#mpu,#ssd,#msd")
+.forEach(x=>x.classList.add("hidden"));
 
-document.getElementById(id).classList.remove("hidden");
-}
+document
+.getElementById(id)
+.classList.remove("hidden");
 
+}
+function showPage(id){
+...
+}
 function importSPU(){
 
-const text=document.getElementById("spuImport").value;
+const text =
+document.getElementById("spuImport").value;
 
-const radky=text.split("\\n");
+const radky = text.split("\n");
 
-radky.forEach((nazev,index)=>{
+radky.forEach(nazev=>{
 
 if(nazev.trim()!==""){
 
 starsiPU.push({
-  start: starsiPU.length+1,
-  druzstvo:nazev.trim(),
-  lp:"",
-  pp:"",
-  np:false,
-  vysledek:""
+start: starsiPU.length + 1,
+poradi: "",
+druzstvo: nazev.trim(),
+lp: "",
+pp: "",
+vysledek: "",
+np: false
 });
 
 }
 
 });
 
-vykresliSPU();
+prepocetSPU();
+
+}
+
+function casNaCislo(cas){
+
+if(!cas) return 999999;
+
+const c = cas.split(":");
+
+if(c.length!==2) return 999999;
+
+return parseInt(c[0])*100 +
+parseInt(c[1]);
+
 }
 
 function prepocetSPU(){
 
-  starsiPU.forEach(d=>{
+starsiPU.forEach(d=>{
 
-    if(d.np){
-      d.vysledek="NP";
-      return;
-    }
+if(d.np){
 
-    if(d.lp!=="" && d.pp!==""){
+d.vysledek="NP";
+return;
 
-      let lp = parseInt(d.lp.replace(":",""));
-let pp = parseInt(d.pp.replace(":",""));
+}
 
-      let horsi = Math.max(lp,pp);
+if(d.lp!=="" && d.pp!==""){
+
+const lp = casNaCislo(d.lp);
+const pp = casNaCislo(d.pp);
+
+const horsi = Math.max(lp,pp);
 
 d.vysledek =
-Math.floor(horsi/100) +
-":" +
-String(horsi%100).padStart(2,"0");
+Math.floor(horsi/100)
 
-    }else{
-      d.vysledek="";
-    }
++ ":" +
+  String(horsi%100)
+  .padStart(2,"0");
 
-  });
+}else{
 
-  vykresliSPU();
+d.vysledek="";
+
 }
-let serazene = starsiPU
-.filter(d => d.vysledek !== "" && d.vysledek !== "NP")
+
+});
+
+seradSPU();
+vykresliSPU();
+
+}
+
+function seradSPU(){
+
+const serazene =
+starsiPU
+.filter(d =>
+d.vysledek!=="" &&
+d.vysledek!=="NP"
+)
 .slice();
 
 serazene.sort((a,b)=>{
 
- let ca=parseInt(a.vysledek.replace(":",""));
- let cb=parseInt(b.vysledek.replace(":",""));
+return (
+casNaCislo(a.vysledek)
 
- return ca-cb;
-
-});
-
-serazene.forEach((d,index)=>{
- d.poradi=index+1;
-});
-
-starsiPU.forEach(d=>{
- if(d.vysledek==="NP"){
-   d.poradi="NP";
- }
-});
-  function seradSPU(){
-
-let serazene = starsiPU
-.filter(d => d.vysledek !== "" && d.vysledek !== "NP")
-.slice();
-
-serazene.sort((a,b)=>{
-
-let ca = parseInt(a.vysledek.replace(":",""));
-let cb = parseInt(b.vysledek.replace(":",""));
-
-return ca-cb;
+casNaCislo(b.vysledek)
+);
 
 });
 
 serazene.forEach((d,index)=>{
-d.poradi=index+1;
+
+d.poradi = index + 1;
+
 });
 
 starsiPU.forEach(d=>{
+
 if(d.vysledek==="NP"){
 d.poradi="NP";
 }
+
 });
 
-  }
+}
+  function smazSPU(index){
+
+starsiPU.splice(index,1);
+
+starsiPU.forEach((d,i)=>{
+d.start=i+1;
+});
+
+prepocetSPU();
+
+}
+
 function vykresliSPU(){
 
-let html=`
-<table>
-<tr>
+let html = `
+
+<table><tr>
 <th>Start</th>
 <th>Pořadí</th>
 <th>Družstvo</th>
@@ -253,48 +320,50 @@ let html=`
 <th>PP</th>
 <th>Výsledek</th>
 <th>NP</th>
+<th>Akce</th>
 </tr>
-`;
+`;starsiPU.forEach((d,i)=>{
 
-starsiPU.forEach((d,i)=>{
+let trida="";
+
+if(d.poradi===1) trida="poradi1";
+if(d.poradi===2) trida="poradi2";
+if(d.poradi===3) trida="poradi3";
 
 html += `
-<tr>
 
-<td>${d.start}</td>
-<td>${d.poradi || ""}</td>
-<td>${d.druzstvo}</td>
-<td>
+<tr class="${trida}"><td>${d.start}</td><td>${d.poradi || ""}</td><td>${d.druzstvo}</td><td>
 <input
- value="${d.lp}"
- onchange="starsiPU[${i}].lp=this.value;prepocetSPU();">
-</td>
-
-<td>
+value="${d.lp}"
+onchange="
+starsiPU[${i}].lp=this.value;
+prepocetSPU();
+">
+</td><td>
 <input
- value="${d.pp}"
- onchange="starsiPU[${i}].pp=this.value;prepocetSPU();">
-</td>
-
-<td>${d.vysledek}</td>
-
-<td>
+value="${d.pp}"
+onchange="
+starsiPU[${i}].pp=this.value;
+prepocetSPU();
+">
+</td><td>${d.vysledek}</td><td>
 <input
- type="checkbox"
- ${d.np ? "checked" : ""}
- onchange="starsiPU[${i}].np=this.checked;prepocetSPU();">
-</td>
-</tr>
-`;
+type="checkbox"
+${d.np ? "checked" : ""}
+onchange="
+starsiPU[${i}].np=this.checked;
+prepocetSPU();
+">
+</td><td>
+<button
+onclick="smazSPU(${i})">
+🗑
+</button>
+</td></tr>
+`;});
 
-});
+html += "</table>";
 
-html+="</table>";
+document.getElementById("spuObsah").innerHTML = html;
 
-document.getElementById("spuObsah").innerHTML=html;
 }
-
-</script>
-
-</body>
-</html>
