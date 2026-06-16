@@ -151,6 +151,16 @@ Importovat družstva
 
 <h2>Starší - Štafeta dvojic</h2>
 
+<h3>Import závodníků</h3>
+
+<textarea id="ssdImport"></textarea>
+
+<br>
+
+<button onclick="importSSD()">
+Importovat závodníky
+</button>
+
 <div id="ssdObsah"></div>
 
 </div>
@@ -167,6 +177,7 @@ Importovat družstva
 
 let starsiPU=[];
 let mladsiPU=[];
+let starsiSD=[];
   
 function showPage(id){
 
