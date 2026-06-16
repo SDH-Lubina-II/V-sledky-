@@ -204,6 +204,8 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 window.db = db;
+window.setDoc = setDoc;
+window.doc = doc;
 </script>
 
 <script>
@@ -942,6 +944,22 @@ html += "</table>";
 
 document.getElementById("spuObsah").innerHTML = html;
 
+}
+
+async function ulozOnline(){
+
+await setDoc(
+doc(db,"zavody","hlavni"),
+{
+starsiPU,
+mladsiPU,
+starsiSD,
+mladsiSD,
+cas:new Date().toISOString()
+}
+);
+
+alert("Výsledky uloženy online");
 }
 
 </script>
