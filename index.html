@@ -164,7 +164,35 @@ starsiPU.push({
 vykresliSPU();
 }
 
+function prepocetSPU(){
+
+  starsiPU.forEach(d=>{
+
+    if(d.np){
+      d.vysledek="NP";
+      return;
+    }
+
+    if(d.lp!=="" && d.pp!==""){
+
+      let lp=parseFloat(d.lp.replace(",","."));
+      let pp=parseFloat(d.pp.replace(",","."));
+
+      d.vysledek=Math.max(lp,pp).toFixed(2);
+
+    }else{
+      d.vysledek="";
+    }
+
+  });
+
+  vykresliSPU();
+}
+
 function vykresliSPU(){
+
+  ...
+}
 
 let html=`
 <table>
