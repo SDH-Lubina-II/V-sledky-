@@ -257,7 +257,7 @@ const radky = text.split("\n");
 
 radky.forEach(radek=>{
 
-const udaje = radek.split("\t");
+const udaje = radek.split(/\t|;/);
 
 if(udaje.length>=3){
 
@@ -505,6 +505,7 @@ let html = `
 <th>PP</th>
 <th>Výsledek</th>
 <th>NP</th>
+<th>🗑️</th>
 </tr>
 `;
 
@@ -551,6 +552,16 @@ mladsiPU[${i}].np=this.checked;
 prepocetMPU();
 ">
 </td>
+
+<td>
+<button onclick="
+mladsiPU.splice(${i},1);
+vykresliMPU();
+">
+🗑️
+</button>
+</td>
+
 </tr>
 `;
 
