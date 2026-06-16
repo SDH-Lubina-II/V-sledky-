@@ -434,6 +434,82 @@ d.poradi="NP";
 });
 
 }
+function vykresliMSD(){
+
+let html = `
+<table><tr>
+<th>Pořadí</th>
+<th>Závodník</th>
+<th>Družstvo</th>
+<th>1. pokus</th>
+<th>2. pokus</th>
+<th>Výsledek</th>
+<th>NP</th>
+<th>🗑️</th>
+</tr>
+`;
+
+mladsiSD.forEach((d,i)=>{
+
+let trida="";
+
+if(d.poradi==1) trida="poradi1";
+if(d.poradi==2) trida="poradi2";
+if(d.poradi==3) trida="poradi3";
+
+html += `
+<tr class="${trida}">
+<td>${d.poradi || ""}</td>
+<td>${d.prijmeni} ${d.jmeno}</td>
+<td>${d.druzstvo}</td>
+
+<td>
+<input
+value="${d.cas1}"
+onchange="
+mladsiSD[${i}].cas1=this.value;
+prepocetMSD();
+">
+</td>
+
+<td>
+<input
+value="${d.cas2}"
+onchange="
+mladsiSD[${i}].cas2=this.value;
+prepocetMSD();
+">
+</td>
+
+<td>${d.vysledek}</td>
+
+<td>
+<input
+type="checkbox"
+${d.np ? "checked" : ""}
+onchange="
+mladsiSD[${i}].np=this.checked;
+prepocetMSD();
+">
+</td>
+
+<td>
+<button onclick="
+mladsiSD.splice(${i},1);
+vykresliMSD();
+">
+🗑️
+</button>
+</td>
+
+</tr>
+`;
+});
+
+html += "</table>";
+
+document.getElementById("msdObsah").innerHTML = html;
+}
 function seradSSD(){
 
 const serazene =
