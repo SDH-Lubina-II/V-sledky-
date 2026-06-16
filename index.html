@@ -149,11 +149,12 @@ radky.forEach((nazev,index)=>{
 if(nazev.trim()!==""){
 
 starsiPU.push({
-start: starsiPU.length+1,
-druzstvo:nazev.trim(),
-lp:"",
-pp:"",
-np:false
+  start: starsiPU.length+1,
+  druzstvo:nazev.trim(),
+  lp:"",
+  pp:"",
+  np:false,
+  vysledek:""
 });
 
 }
@@ -172,7 +173,8 @@ let html=`
 <th>Družstvo</th>
 <th>LP</th>
 <th>PP</th>
-<th>NP</th>
+<th>Výsledek</th>
+<th>NP</th>>
 </tr>
 `;
 
@@ -182,9 +184,26 @@ html+=`
 <tr>
 <td>${d.start}</td>
 <td>${d.druzstvo}</td>
-<td><input></td>
-<td><input></td>
-<td><input type="checkbox"></td>
+<td>
+<input
+ value="${d.lp}"
+ onchange="starsiPU[${i}].lp=this.value;prepocetSPU();">
+</td>
+
+<td>
+<input
+ value="${d.pp}"
+ onchange="starsiPU[${i}].pp=this.value;prepocetSPU();">
+</td>
+
+<td>${d.vysledek}</td>
+
+<td>
+<input
+ type="checkbox"
+ ${d.np ? "checked" : ""}
+ onchange="starsiPU[${i}].np=this.checked;prepocetSPU();">
+</td>
 </tr>
 `;
 
