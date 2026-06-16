@@ -324,8 +324,14 @@ let html = `
 
 mladsiPU.forEach((d,i)=>{
 
+let trida="";
+
+if(d.poradi===1) trida="poradi1";
+if(d.poradi===2) trida="poradi2";
+if(d.poradi===3) trida="poradi3";
+
 html += `
-<tr>
+<tr class="${trida}">
 <td>${d.start}</td>
 <td>${d.poradi || ""}</td>
 <td>${d.druzstvo}</td>
