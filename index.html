@@ -193,13 +193,35 @@ String(horsi%100).padStart(2,"0");
 
   vykresliSPU();
 }
+let serazene = starsiPU
+.filter(d => d.vysledek !== "" && d.vysledek !== "NP")
+.slice();
 
+serazene.sort((a,b)=>{
+
+ let ca=parseInt(a.vysledek.replace(":",""));
+ let cb=parseInt(b.vysledek.replace(":",""));
+
+ return ca-cb;
+
+});
+
+serazene.forEach((d,index)=>{
+ d.poradi=index+1;
+});
+
+starsiPU.forEach(d=>{
+ if(d.vysledek==="NP"){
+   d.poradi="NP";
+ }
+});
 function vykresliSPU(){
 
 let html=`
 <table>
 <tr>
 <th>Start</th>
+<th>Pořadí</th>
 <th>Družstvo</th>
 <th>LP</th>
 <th>PP</th>
@@ -210,9 +232,8 @@ let html=`
 
 starsiPU.forEach((d,i)=>{
 
-html+=`
-<tr>
 <td>${d.start}</td>
+<td>${d.poradi || ""}</td>
 <td>${d.druzstvo}</td>
 <td>
 <input
