@@ -175,10 +175,15 @@ function prepocetSPU(){
 
     if(d.lp!=="" && d.pp!==""){
 
-      let lp=parseFloat(d.lp.replace(",","."));
-      let pp=parseFloat(d.pp.replace(",","."));
+      let lp = parseInt(d.lp.replace(":",""));
+let pp = parseInt(d.pp.replace(":",""));
 
-      d.vysledek=Math.max(lp,pp).toFixed(2);
+      let horsi = Math.max(lp,pp);
+
+d.vysledek =
+Math.floor(horsi/100) +
+":" +
+String(horsi%100).padStart(2,"0");
 
     }else{
       d.vysledek="";
