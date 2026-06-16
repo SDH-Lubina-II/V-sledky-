@@ -139,7 +139,7 @@ Importovat družstva
 
 <br>
 
-<button>
+<button onclick="importMPU()">
 Importovat družstva
 </button>
 
@@ -166,7 +166,8 @@ Importovat družstva
 <script>
 
 let starsiPU=[];
-
+let mladsiPU=[];
+  
 function showPage(id){
 
 document
@@ -207,7 +208,112 @@ np: false
 prepocetSPU();
 
 }
+function importMPU(){
 
+const text =
+document.getElementById("mpuImport").value;
+
+const radky = text.split("\n");
+
+radky.forEach(nazev=>{
+
+if(nazev.trim()!==""){
+
+mladsiPU.push({
+start: mladsiPU.length + 1,
+poradi: "",
+druzstvo: nazev.trim(),
+lp: "",
+pp: "",
+vysledek: "",
+np: false
+});
+
+}
+
+});
+
+prepocetMPU();
+
+}
+
+function prepocetMPU(){
+
+mladsiPU.forEach(d=>{
+
+if(d.np){
+
+d.vysledek="NP";
+return;
+
+}
+
+if(d.lp!=="" && d.pp!==""){
+
+const lp = casNaCislo(d.lp);
+const pp = casNaCislo(d.pp);
+
+const horsi = Math.max(lp,pp);
+
+d.vysledek =
+Math.floor(horsi/100)
++ ":" +
+String(horsi%100).padStart(2,"0");
+
+}else{
+
+d.vysledek="";
+
+}
+
+});
+
+seradMPU();
+vykresliMPU();
+
+}
+
+function seradMPU(){
+
+const serazene =
+mladsiPU
+.filter(d =>
+d.vysledek!=="" &&
+d.vysledek!=="NP"
+)
+.slice();
+
+serazene.sort((a,b)=>{
+
+return (
+casNaCislo(a.vysledek) -
+casNaCislo(b.vysledek)
+);
+
+});
+
+serazene.forEach((d,index)=>{
+
+d.poradi=index+1;
+
+});
+
+mladsiPU.forEach(d=>{
+
+if(d.vysledek==="NP"){
+d.poradi="NP";
+}
+
+});
+
+}
+
+function vykresliMPU(){
+
+document.getElementById("mpuObsah").innerHTML =
+"<p>MPU připraveno</p>";
+
+}
 function casNaCislo(cas){
 
 if(!cas) return 999999;
