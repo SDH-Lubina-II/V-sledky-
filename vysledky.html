@@ -132,20 +132,39 @@ data.sort((a, b) => {
   let html = "<table>";
   html += "<tr>";
 
-  const sloupce = ["poradi","druzstvo","lp","pp","vysledek","np"];
+let sloupce;
 
-  const nazvy = {
-    poradi: "Pořadí",
-    druzstvo: "Družstvo",
-    lp: "LP",
-    pp: "PP",
-    vysledek: "Výsledek",
-    np: "Pokus"
-};
-  sloupce.forEach(sloupec => {
+if (elementId === "ssd" || elementId === "msd") {
+    sloupce = ["poradi","jmeno","prijmeni","cas1","cas2","vysledek","np"];
+} else {
+    sloupce = ["poradi","druzstvo","lp","pp","vysledek","np"];
+}
+
+  let nazvy;
+
+if (elementId === "ssd" || elementId === "msd") {
+    nazvy = {
+        poradi: "Pořadí",
+        jmeno: "Jméno",
+        prijmeni: "Příjmení",
+        cas1: "Čas 1",
+        cas2: "Čas 2",
+        vysledek: "Výsledek",
+        np: "Pokus"
+    };
+} else {
+    nazvy = {
+        poradi: "Pořadí",
+        druzstvo: "Družstvo",
+        lp: "LP",
+        pp: "PP",
+        vysledek: "Výsledek",
+        np: "Pokus"
+    };
+}
+sloupce.forEach(sloupec => {
     html += `<th>${nazvy[sloupec]}</th>`;
 });
-
 html += "</tr>";
 
 data.forEach(radek => {
