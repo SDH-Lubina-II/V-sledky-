@@ -120,6 +120,14 @@ Mladší - Štafeta dvojic
 <button onclick="exportData()">
 📥 Export dat
 </button>
+
+  <br><br>
+
+<input type="file" id="importSoubor" accept=".json">
+
+<button onclick="importData()">
+📤 Import dat
+</button>
 </div>
 
 <div id="spu" class="section">
@@ -998,6 +1006,46 @@ a.download = "vysledky-zaloha.json";
 a.click();
 
 }  
+function importData(){
+
+const soubor =
+document.getElementById("importSoubor").files[0];
+
+if(!soubor){
+alert("Vyber soubor JSON");
+return;
+}
+
+const reader = new FileReader();
+
+reader.onload = function(e){
+
+const data =
+JSON.parse(e.target.result);
+
+starsiPU = data.starsiPU || [];
+mladsiPU = data.mladsiPU || [];
+starsiSD = data.starsiSD || [];
+mladsiSD = data.mladsiSD || [];
+
+document.getElementById("nazevSouteze").value =
+data.nazev || "";
+
+document.getElementById("datumSouteze").value =
+data.datum || "";
+
+vykresliSPU();
+vykresliMPU();
+vykresliSSD();
+vykresliMSD();
+
+alert("Data načtena");
+
+};
+
+reader.readAsText(soubor);
+
+}
 </script>
 </body>
 </html>
