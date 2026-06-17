@@ -189,10 +189,6 @@ document.getElementById(id+"_tabulka").innerHTML=html;
 
 }
 
-vytvorTabulku("Muži","muzi");
-vytvorTabulku("Ženy","zeny");
-vytvorTabulku("Veteráni 35+","veterani");
-
 async function ulozit() {
 
   const data = {
@@ -209,6 +205,11 @@ async function ulozit() {
   );
 
   alert("Uloženo");
+}
+
+vytvorTabulku("Muži","muzi");
+vytvorTabulku("Ženy","zeny");
+vytvorTabulku("Veteráni 35+","veterani");
 }    
 </script>
 </body>
