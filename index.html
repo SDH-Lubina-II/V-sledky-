@@ -116,6 +116,10 @@ Mladší - Štafeta dvojic
 <button onclick="ulozOnline()">
 💾 Uložit online
 </button>
+
+<button onclick="ulozOnline()">
+💾 Uložit online
+</button>
 </div>
 
 <div id="spu" class="section">
@@ -967,6 +971,33 @@ cas:new Date().toISOString()
 alert("Výsledky uloženy online");
 }
 
+function exportData(){
+
+const data = {
+starsiPU,
+mladsiPU,
+starsiSD,
+mladsiSD,
+nazev:
+document.getElementById("nazevSouteze").value,
+datum:
+document.getElementById("datumSouteze").value
+};
+
+const blob = new Blob(
+[JSON.stringify(data,null,2)],
+{type:"application/json"}
+);
+
+const a = document.createElement("a");
+
+a.href = URL.createObjectURL(blob);
+
+a.download = "vysledky-zaloha.json";
+
+a.click();
+
+}  
 </script>
 </body>
 </html>
