@@ -22,6 +22,22 @@ pre{
   border-radius:8px;
   overflow:auto;
 }
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+  margin-bottom:20px;
+}
+
+th,td{
+  border:1px solid #ccc;
+  padding:6px;
+  text-align:center;
+}
+
+th{
+  background:#eaeaea;
+}
 </style>
 </head>
 
@@ -49,19 +65,51 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+function vytvorTabulku(data, elementId) {
+
+  if (!data || data.length === 0) {
+    document.getElementById(elementId).innerHTML = "Žádná data";
+    return;
+  }
+
+  let html = "<table>";
+  html += "<tr>";
+
+  Object.keys(data[0]).forEach(sloupec => {
+    html += `<th>${sloupec}</th>`;
+  });
+
+  html += "</tr>";
+
+  data.forEach(radek => {
+    html += "<tr>";
+
+    Object.values(radek).forEach(hodnota => {
+      html += `<td>${hodnota}</td>`;
+    });
+
+    html += "</tr>";
+  });
+
+  html += "</table>";
+
+  document.getElementById(elementId).innerHTML = html;
+}
+
 async function nactiData() {
 
   const snap = await getDoc(
     doc(db, "zavody", "hlavni")
   );
 
-  if(snap.exists()){
-    document.getElementById("data").textContent =
-      JSON.stringify(snap.data(), null, 2);
-  } else {
-    document.getElementById("data").textContent =
-      "Dokument nebyl nalezen.";
-  }
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+
+  vytvorTabulku(data.starsiPU, "spu");
+  vytvorTabulku(data.mladsiPU, "mpu");
+  vytvorTabulku(data.starsiSD, "ssd");
+  vytvorTabulku(data.mladsiSD, "msd");
 }
 
 nactiData();
