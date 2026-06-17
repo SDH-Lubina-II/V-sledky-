@@ -191,20 +191,28 @@ document.getElementById(id+"_tabulka").innerHTML=html;
 
 async function ulozit() {
 
-  const data = {
-    nazev: document.getElementById("nazev").value,
-    datum: document.getElementById("datum").value,
-    muzi: [],
-    zeny: [],
-    veterani: []
-  };
+  try {
 
-  await setDoc(
-    doc(db, "Dospeli", "Dospeli"),
-    data
-  );
+    const data = {
+      nazev: document.getElementById("nazev").value,
+      datum: document.getElementById("datum").value,
+      muzi: [],
+      zeny: [],
+      veterani: []
+    };
 
-  alert("Uloženo");
+    await setDoc(
+      doc(db, "Dospeli", "Dospeli"),
+      data
+    );
+
+    alert("Uloženo");
+
+  } catch(err) {
+
+    alert(err.message);
+
+  }
 }
 
 vytvorTabulku("Muži","muzi");
