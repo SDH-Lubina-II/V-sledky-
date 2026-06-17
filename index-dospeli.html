@@ -490,6 +490,10 @@ vykresliTabulku(veterani,"veteraniObsah","veterani");
 
 async function ulozOnline(){
 
+ulozLokalne()
+
+
+
 await setDoc(
 doc(db,"Dospeli","Dospeli"),
 {
@@ -533,9 +537,62 @@ vykresliVeterani();
 }
 
 }
-showPage("muzi");
-nactiOnline();
 
+function ulozLokalne(){
+
+const data = {
+muzi,
+zeny,
+veterani,
+nazev:
+document.getElementById("nazevSouteze").value,
+datum:
+document.getElementById("datumSouteze").value
+};
+
+localStorage.setItem(
+"DOSPELI_VYSLEDKY",
+JSON.stringify(data)
+);
+
+}
+
+  function nactiLokalne(){
+
+const ulozenaData =
+localStorage.getItem("DOSPELI_VYSLEDKY");
+
+if(!ulozenaData) return;
+
+if(confirm(
+"Nalezena lokální záloha. Obnovit data?"
+)){
+
+const data =
+JSON.parse(ulozenaData);
+
+muzi = data.muzi || [];
+zeny = data.zeny || [];
+veterani = data.veterani || [];
+
+document.getElementById("nazevSouteze").value =
+data.nazev || "";
+
+document.getElementById("datumSouteze").value =
+data.datum || "";
+
+vykresliMuzi();
+vykresliZeny();
+vykresliVeterani();
+
+}
+
+  }
+
+showPage("muzi");
+nactiLokalne();
+nactiOnline();
+  
 </script>
 </body>
 </html> 
