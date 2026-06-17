@@ -2,93 +2,71 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Live výsledky</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Průběžné výsledky</title>
 
 <style>
+body{
+  font-family: Arial, sans-serif;
+  margin:20px;
+  background:#f5f5f5;
+}
 
-  <script type="module">
+h1{
+  text-align:center;
+}
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+pre{
+  background:white;
+  padding:10px;
+  border-radius:8px;
+  overflow:auto;
+}
+</style>
+</head>
 
-import {
-getFirestore,
-doc,
-getDoc
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+<body>
+
+<h1>Průběžné výsledky</h1>
+
+<h2>Data ze závodu</h2>
+<pre id="data">Načítám...</pre>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-apiKey: "AIzaSyBnHKiL6ANjvRbUpd3sv4TwGuq7-4_c6J8",
-authDomain: "zkouska-2.firebaseapp.com",
-projectId: "zkouska-2",
-storageBucket: "zkouska-2.firebasestorage.app",
-messagingSenderId: "51239007198",
-appId: "1:51239007198:web:4e98cdfd91279a337da34f"
+  apiKey: "AIzaSyBnHKiL6ANjvRbUpd3sv4TwGuq7-4_c6J8",
+  authDomain: "zkouska-2.firebaseapp.com",
+  projectId: "zkouska-2",
+  storageBucket: "zkouska-2.firebasestorage.app",
+  messagingSenderId: "51239007198",
+  appId: "1:51239007198:web:4e98cdfd91279a337da34f"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-async function nactiData(){
+async function nactiData() {
 
-const snap =
-await getDoc(
-doc(db,"zavody","hlavni")
-);
+  const snap = await getDoc(
+    doc(db, "zavody", "hlavni")
+  );
 
-document.getElementById("spu").innerHTML =
-JSON.stringify(snap.data());;
-
+  if(snap.exists()){
+    document.getElementById("data").textContent =
+      JSON.stringify(snap.data(), null, 2);
+  } else {
+    document.getElementById("data").textContent =
+      "Dokument nebyl nalezen.";
+  }
 }
 
 nactiData();
 
 </script>
-body{
-font-family:Arial,sans-serif;
-margin:20px;
-background:#f5f5f5;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-bottom:20px;
-background:white;
-}
-
-th,td{
-border:1px solid #ccc;
-padding:6px;
-text-align:center;
-}
-
-th{
-background:#eaeaea;
-}
-
-h2{
-margin-top:30px;
-}
-
-</style>
-
-</head>
-<body>
-
-<h1>Průběžné výsledky</h1>
-
-<h2>Starší - Požární útok</h2>
-<div id="spu"></div>
-
-<h2>Mladší - Požární útok</h2>
-<div id="mpu"></div>
-
-<h2>Starší - Štafeta dvojic</h2>
-<div id="ssd"></div>
-
-<h2>Mladší - Štafeta dvojic</h2>
-<div id="msd"></div>
 
 </body>
 </html>
