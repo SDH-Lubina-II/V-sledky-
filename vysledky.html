@@ -166,7 +166,18 @@ sloupce.forEach(sloupec => {
 html += "</tr>";
 
 data.forEach(radek => {
-    html += "<tr>";
+
+    let styl = "";
+
+    if (radek.poradi == 1) {
+        styl = ' style="background:#ffd700;font-weight:bold;"';
+    } else if (radek.poradi == 2) {
+        styl = ' style="background:#c0c0c0;font-weight:bold;"';
+    } else if (radek.poradi == 3) {
+        styl = ' style="background:#cd7f32;font-weight:bold;"';
+    }
+
+    html += `<tr${styl}>`;
   
     sloupce.forEach(sloupec => {
         if (sloupec === "np") {
@@ -176,7 +187,21 @@ data.forEach(radek => {
         html += `<td style="font-size:24px;">🟢</td>`;;
     }
 } else {
+    if (sloupec === "poradi") {
+
+    let hodnota = radek[sloupec];
+
+    if (hodnota == 1) hodnota = "🥇";
+    else if (hodnota == 2) hodnota = "🥈";
+    else if (hodnota == 3) hodnota = "🥉";
+
+    html += `<td>${hodnota}</td>`;
+
+} else {
+
     html += `<td>${radek[sloupec] ?? ""}</td>`;
+
+    }
 }
     });
 
@@ -205,7 +230,8 @@ async function nactiData() {
 }
 
 nactiData();
-
+setInterval(nactiData, 15000);
+  
 function showTab(tab){
 
 document.getElementById("spuBox").style.display = "none";
