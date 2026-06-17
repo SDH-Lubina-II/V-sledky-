@@ -964,7 +964,9 @@ document.getElementById("spuObsah").innerHTML = html;
 }
 
 async function ulozOnline(){
-
+  
+ulozLokalne();
+  
 await setDoc(
 doc(db,"zavody","hlavni"),
 {
@@ -1046,6 +1048,63 @@ alert("Data načtena");
 reader.readAsText(soubor);
 
 }
+
+function ulozLokalne(){
+
+const data = {
+starsiPU,
+mladsiPU,
+starsiSD,
+mladsiSD,
+nazev:
+document.getElementById("nazevSouteze").value,
+datum:
+document.getElementById("datumSouteze").value
+};
+
+localStorage.setItem(
+"SDH_VYSLEDKY",
+JSON.stringify(data)
+);
+
+}
+function nactiLokalne(){
+
+const ulozenaData =
+localStorage.getItem("SDH_VYSLEDKY");
+
+if(!ulozenaData) return;
+
+if(
+confirm(
+"Nalezena lokální záloha. Obnovit data?"
+)
+){
+
+const data =
+JSON.parse(ulozenaData);
+
+starsiPU = data.starsiPU || [];
+mladsiPU = data.mladsiPU || [];
+starsiSD = data.starsiSD || [];
+mladsiSD = data.mladsiSD || [];
+
+document.getElementById("nazevSouteze").value =
+data.nazev || "";
+
+document.getElementById("datumSouteze").value =
+data.datum || "";
+
+vykresliSPU();
+vykresliMPU();
+vykresliSSD();
+vykresliMSD();
+
+}
+
+}
+
+nactiLokalne();
 </script>
 </body>
 </html>
