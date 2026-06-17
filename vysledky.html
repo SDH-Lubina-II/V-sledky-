@@ -135,7 +135,7 @@ data.sort((a, b) => {
 let sloupce;
 
 if (elementId === "ssd" || elementId === "msd") {
-    sloupce = ["poradi","jmeno","prijmeni","cas1","cas2","vysledek","np"];
+    sloupce = ["poradi","jmeno","prijmeni","vysledek","np"];;
 } else {
     sloupce = ["poradi","druzstvo","lp","pp","vysledek","np"];
 }
@@ -144,14 +144,12 @@ if (elementId === "ssd" || elementId === "msd") {
 
 if (elementId === "ssd" || elementId === "msd") {
     nazvy = {
-        poradi: "Pořadí",
-        jmeno: "Jméno",
-        prijmeni: "Příjmení",
-        cas1: "Čas 1",
-        cas2: "Čas 2",
-        vysledek: "Výsledek",
-        np: "Pokus"
-    };
+    poradi: "Pořadí",
+    jmeno: "Jméno",
+    prijmeni: "Příjmení",
+    vysledek: "Výsledek",
+    np: "Pokus"
+};
 } else {
     nazvy = {
         poradi: "Pořadí",
