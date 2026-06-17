@@ -1,1 +1,199 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Výsledky SDH - Dospělí</title>
+
+<style>
+body{
+    font-family:Arial,sans-serif;
+    margin:20px;
+    background:#f4f4f4;
+}
+
+.box{
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+button{
+    padding:10px;
+    margin:5px;
+}
+
+table{
+    border-collapse:collapse;
+    width:100%;
+}
+
+th,td{
+    border:1px solid #ccc;
+    padding:5px;
+    text-align:center;
+}
+
+input[type="text"]{
+    width:90%;
+}
+
+.zlata{
+    background:#ffd700;
+}
+
+.stribrna{
+    background:#dcdcdc;
+}
+
+.bronzova{
+    background:#cd7f32;
+}
+</style>
+</head>
+<body>
+
+<h1>Výsledky SDH - Dospělí</h1>
+
+<div class="box">
+<h2>Nastavení soutěže</h2>
+
+<label>Název soutěže</label><br>
+<input type="text" id="nazev"><br><br>
+
+<label>Datum</label><br>
+<input type="date" id="datum">
+</div>
+
+<div class="box">
+
+<button onclick="showTab('muzi')">Muži</button>
+<button onclick="showTab('zeny')">Ženy</button>
+<button onclick="showTab('veterani')">Veteráni 35+</button>
+
+<br><br>
+
+<button onclick="ulozit()">💾 Uložit online</button>
+
+</div>
+
+<div id="muziBox"></div>
+<div id="zenyBox" style="display:none"></div>
+<div id="veteraniBox" style="display:none"></div>
+
+<script>
+function showTab(tab){
+
+document.getElementById("muziBox").style.display="none";
+document.getElementById("zenyBox").style.display="none";
+document.getElementById("veteraniBox").style.display="none";
+
+document.getElementById(tab+"Box").style.display="block";
+
+}
+
+function vytvorTabulku(nadpis,id){
+
+document.getElementById(id).innerHTML=`
+<div class="box">
+
+<h2>${nadpis}</h2>
+
+<textarea id="${id}_import" rows="8" style="width:100%;"></textarea>
+
+<br><br>
+
+<button onclick="importuj('${id}')">Importovat družstva</button>
+
+<div id="${id}_tabulka"></div>
+
+</div>
+`;
+
+}
+
+function importuj(id){
+
+const text=document.getElementById(id+"_import").value;
+
+const radky=text
+.split("\n")
+.filter(x=>x.trim()!="");
+
+let html=`
+<table>
+<tr>
+<th>Pořadí</th>
+<th>Družstvo</th>
+<th>LP</th>
+<th>PP</th>
+<th>Výsledek</th>
+<th>NP</th>
+</tr>
+`;
+
+radky.forEach((druzstvo,index)=>{
+
+html+=`
+<tr>
+
+<td>
+<input type="number" value="${index+1}">
+</td>
+
+<td>
+<input type="text" value="${druzstvo}">
+</td>
+
+<td>
+<input type="text">
+</td>
+
+<td>
+<input type="text">
+</td>
+
+<td>
+</td>
+
+<td>
+<input type="checkbox">
+</td>
+
+</tr>
+`;
+
+});
+
+html+="</table>";
+
+document.getElementById(id+"_tabulka").innerHTML=html;
+
+}
+
+vytvorTabulku("Muži","muzi");
+vytvorTabulku("Ženy","zeny");
+vytvorTabulku("Veteráni 35+","veterani");
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "TVŮJ_API_KEY",
+  authDomain: "TVŮJ_PROJEKT.firebaseapp.com",
+  projectId: "TVŮJ_PROJEKT",
+  storageBucket: "TVŮJ_PROJEKT.firebasestorage.app",
+  messagingSenderId: "TVÉ_ID",
+  appId: "TVÉ_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+  
+</script>
+</body>
+</html>
