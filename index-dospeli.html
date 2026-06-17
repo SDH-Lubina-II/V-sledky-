@@ -113,6 +113,26 @@ background:#f4b183;
 💾 Uložit online
 </button>
 
+ <button onclick="ulozOnline()">
+💾 Uložit online
+</button>
+
+  <br><br>
+
+<button onclick="exportDat()">
+📤 Export dat
+</button>
+
+<input
+type="file"
+id="importSoubor"
+accept=".json"
+>
+
+<button onclick="importDat()">
+📥 Import dat
+</button>.
+
 </div>
 
 <div id="muzi" class="section">
@@ -557,6 +577,60 @@ JSON.stringify(data)
 
 }
 
+function exportDat(){
+
+const data = {
+muzi,
+zeny,
+veterani,
+nazev:
+document.getElementById("nazevSouteze").value,
+datum:
+document.getElementById("datumSouteze").value
+};
+
+const blob = new Blob(
+[JSON.stringify(data,null,2)],
+{type:"application/json"}
+);
+
+const a =
+document.createElement("a");
+
+a.href =
+URL.createObjectURL(blob);
+
+a.download =
+"dospeli-vysledky.json";
+
+a.click();
+
+}
+
+showPage("muzi");
+nactiOnline();
+
+function importDat(){
+
+const soubor =
+document.getElementById("importSoubor").files[0];
+
+if(!soubor){
+alert("Nejprve vyber soubor.");
+return;
+}
+
+const reader = new FileReader();
+
+reader.onload = function(e){
+
+const data =
+JSON.parse(e.target.result);
+
+muzi = data.muzi || [];
+zeny = data.zeny || [];
+veterani = data.veterani || [];
+
 document.getElementById("nazevSouteze").value =
 data.nazev || "";
 
@@ -567,12 +641,13 @@ vykresliMuzi();
 vykresliZeny();
 vykresliVeterani();
 
+alert("Data byla importována.");
+
+};
+
+reader.readAsText(soubor);
+
 }
-
-  }
-
-showPage("muzi");
-nactiOnline();
   
 </script>
 </body>
