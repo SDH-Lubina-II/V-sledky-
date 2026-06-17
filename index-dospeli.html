@@ -83,7 +83,23 @@ input[type="text"]{
 <div id="zenyBox" style="display:none"></div>
 <div id="veteraniBox" style="display:none"></div>
 
-<script>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "TVŮJ_API_KEY",
+  authDomain: "TVŮJ_PROJEKT.firebaseapp.com",
+  projectId: "TVŮJ_PROJEKT",
+  storageBucket: "TVŮJ_PROJEKT.firebasestorage.app",
+  messagingSenderId: "TVÉ_ID",
+  appId: "TVÉ_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+    
 function showTab(tab){
 
 document.getElementById("muziBox").style.display="none";
@@ -176,23 +192,6 @@ document.getElementById(id+"_tabulka").innerHTML=html;
 vytvorTabulku("Muži","muzi");
 vytvorTabulku("Ženy","zeny");
 vytvorTabulku("Veteráni 35+","veterani");
-
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "TVŮJ_API_KEY",
-  authDomain: "TVŮJ_PROJEKT.firebaseapp.com",
-  projectId: "TVŮJ_PROJEKT",
-  storageBucket: "TVŮJ_PROJEKT.firebasestorage.app",
-  messagingSenderId: "TVÉ_ID",
-  appId: "TVÉ_APP_ID"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
   
 </script>
 </body>
