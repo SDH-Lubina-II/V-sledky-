@@ -99,6 +99,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+vytvorTabulku("Muži","muzi");
+vytvorTabulku("Ženy","zeny");
+vytvorTabulku("Veteráni 35+","veterani");
     
 function showTab(tab){
 
@@ -215,9 +219,6 @@ async function ulozit() {
   }
 }
 
-vytvorTabulku("Muži","muzi");
-vytvorTabulku("Ženy","zeny");
-vytvorTabulku("Veteráni 35+","veterani");
 
 window.ulozit = ulozit;    
 </script>
