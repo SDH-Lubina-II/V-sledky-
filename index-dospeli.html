@@ -7,73 +7,509 @@
 <title>Výsledky SDH - Dospělí</title>
 
 <style>
+
 body{
-  font-family:Arial,sans-serif;
-  margin:20px;
-  background:#f5f5f5;
+font-family:Arial,sans-serif;
+margin:20px;
+background:#f5f5f5;
+}
+
+h1,h2,h3{
+margin-top:20px;
 }
 
 .section{
-  background:white;
-  padding:15px;
-  border-radius:10px;
-  margin-bottom:20px;
+background:white;
+padding:15px;
+border-radius:10px;
+margin-bottom:20px;
 }
 
 button{
-  padding:10px;
-  margin:5px;
+padding:8px 12px;
+margin:3px;
+cursor:pointer;
+}
+
+input,textarea{
+padding:6px;
+margin:3px;
+}
+
+textarea{
+width:100%;
+height:120px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+background:white;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:6px;
+text-align:center;
+}
+
+th{
+background:#ececec;
 }
 
 .hidden{
-  display:none;
+display:none;
 }
-</style>
-</head>
 
+.poradi1{
+background:#ffd700;
+}
+
+.poradi2{
+background:#d9d9d9;
+}
+
+.poradi3{
+background:#f4b183;
+}
+
+</style>
+
+</head>
 <body>
 
 <h1>Výsledky SDH - Dospělí</h1>
 
 <div class="section">
 
-<button onclick="showPage('muzi')">Muži</button>
-<button onclick="showPage('zeny')">Ženy</button>
-<button onclick="showPage('veterani')">Veteráni 35+</button>
+<h2>Nastavení soutěže</h2>
+
+<label>Název soutěže</label><br>
+<input id="nazevSouteze" style="width:300px"><br>
+
+<label>Datum</label><br>
+<input type="date" id="datumSouteze">
+
+</div>
+
+<div class="section">
+
+<button onclick="showPage('muzi')">
+🚒 Muži
+</button>
+
+<button onclick="showPage('zeny')">
+🚒 Ženy
+</button>
+
+<button onclick="showPage('veterani')">
+🚒 Veteráni 35+
+</button>
+
+<br><br>
+
+<button onclick="ulozOnline()">
+💾 Uložit online
+</button>
 
 </div>
 
 <div id="muzi" class="section">
+
 <h2>Muži</h2>
-<textarea style="width:100%;height:150px"></textarea>
+
+<textarea id="muziImport"></textarea>
+
+<br>
+
+<button onclick="importMuzi()">
+Importovat družstva
+</button>
+
+<div id="muziObsah"></div>
+
 </div>
 
 <div id="zeny" class="section hidden">
+
 <h2>Ženy</h2>
-<textarea style="width:100%;height:150px"></textarea>
+
+<textarea id="zenyImport"></textarea>
+
+<br>
+
+<button onclick="importZeny()">
+Importovat družstva
+</button>
+
+<div id="zenyObsah"></div>
+
 </div>
 
 <div id="veterani" class="section hidden">
+
 <h2>Veteráni 35+</h2>
-<textarea style="width:100%;height:150px"></textarea>
+
+<textarea id="veteraniImport"></textarea>
+
+<br>
+
+<button onclick="importVeterani()">
+Importovat družstva
+</button>
+
+<div id="veteraniObsah"></div>
+
 </div>
 
-<script>
+<script type="module">
 
-function showPage(id){
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 
-  document
-    .querySelectorAll('#muzi,#zeny,#veterani')
-    .forEach(x => x.classList.add('hidden'));
-
-  document
-    .getElementById(id)
-    .classList.remove('hidden');
+import {
+getFirestore,
+doc,
+setDoc,
+getDoc
 }
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-showPage('muzi');
+const firebaseConfig = {
+apiKey: "AIzaSyBnHKiL6ANjvRbUpd3sv4TwGuq7-4_c6J8",
+authDomain: "zkouska-2.firebaseapp.com",
+projectId: "zkouska-2",
+storageBucket: "zkouska-2.firebasestorage.app",
+messagingSenderId: "51239007198",
+appId: "1:51239007198:web:4e98cdfd91279a337da34f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.db = db;
+window.setDoc = setDoc;
+window.doc = doc;
 
 </script>
 
+<script>
+  let muzi=[];
+let zeny=[];
+let veterani=[];
+
+function showPage(id){
+
+document
+.querySelectorAll("#muzi,#zeny,#veterani")
+.forEach(x=>x.classList.add("hidden"));
+
+document
+.getElementById(id)
+.classList.remove("hidden");
+
+}
+
+function casNaCislo(cas){
+
+if(!cas) return 999999;
+
+const c = cas.split(":");
+
+if(c.length!==2) return 999999;
+
+return parseInt(c[0])*100 +
+parseInt(c[1]);
+
+}
+
+function importMuzi(){
+
+const text =
+document.getElementById("muziImport").value;
+
+const radky = text.split("\n");
+
+radky.forEach(nazev=>{
+
+if(nazev.trim()!==""){
+
+muzi.push({
+start: muzi.length + 1,
+poradi:"",
+druzstvo:nazev.trim(),
+lp:"",
+pp:"",
+vysledek:"",
+np:false
+});
+
+}
+
+});
+
+prepocetMuzi();
+
+}
+
+function importZeny(){
+
+const text =
+document.getElementById("zenyImport").value;
+
+const radky = text.split("\n");
+
+radky.forEach(nazev=>{
+
+if(nazev.trim()!==""){
+
+zeny.push({
+start: zeny.length + 1,
+poradi:"",
+druzstvo:nazev.trim(),
+lp:"",
+pp:"",
+vysledek:"",
+np:false
+});
+
+}
+
+});
+
+prepocetZeny();
+
+}
+
+function importVeterani(){
+
+const text =
+document.getElementById("veteraniImport").value;
+
+const radky = text.split("\n");
+
+radky.forEach(nazev=>{
+
+if(nazev.trim()!==""){
+
+veterani.push({
+start: veterani.length + 1,
+poradi:"",
+druzstvo:nazev.trim(),
+lp:"",
+pp:"",
+vysledek:"",
+np:false
+});
+
+}
+
+});
+
+prepocetVeterani();
+
+}
+  function seradPole(pole){
+
+const serazene =
+pole
+.filter(d =>
+d.vysledek!=="" &&
+d.vysledek!=="NP"
+)
+.slice();
+
+serazene.sort((a,b)=>{
+
+return (
+casNaCislo(a.vysledek)
+-
+casNaCislo(b.vysledek)
+);
+
+});
+
+serazene.forEach((d,index)=>{
+
+d.poradi=index+1;
+
+});
+
+pole.forEach(d=>{
+
+if(d.vysledek==="NP"){
+d.poradi="NP";
+}
+
+});
+
+}
+
+function prepocetPole(pole,vykresli){
+
+pole.forEach(d=>{
+
+if(d.np){
+
+d.vysledek="NP";
+return;
+
+}
+
+if(d.lp!=="" && d.pp!==""){
+
+const lp = casNaCislo(d.lp);
+const pp = casNaCislo(d.pp);
+
+const horsi = Math.max(lp,pp);
+
+d.vysledek =
+Math.floor(horsi/100)
++ ":" +
+String(horsi%100).padStart(2,"0");
+
+}else{
+
+d.vysledek="";
+
+}
+
+});
+
+seradPole(pole);
+
+vykresli();
+
+}
+
+function prepocetMuzi(){
+prepocetPole(muzi,vykresliMuzi);
+}
+
+function prepocetZeny(){
+prepocetPole(zeny,vykresliZeny);
+}
+
+function prepocetVeterani(){
+prepocetPole(veterani,vykresliVeterani);
+}
+ function vykresliTabulku(pole,obsahId,nazevPole){
+
+let html=`
+<table>
+<tr>
+<th>Start</th>
+<th>Pořadí</th>
+<th>Družstvo</th>
+<th>LP</th>
+<th>PP</th>
+<th>Výsledek</th>
+<th>NP</th>
+<th>🗑️</th>
+</tr>
+`;
+
+pole.forEach((d,i)=>{
+
+let trida="";
+
+if(d.poradi===1) trida="poradi1";
+if(d.poradi===2) trida="poradi2";
+if(d.poradi===3) trida="poradi3";
+
+html+=`
+<tr class="${trida}">
+
+<td>${d.start}</td>
+
+<td>${d.poradi || ""}</td>
+
+<td>${d.druzstvo}</td>
+
+<td>
+<input
+value="${d.lp}"
+onchange="
+${nazevPole}[${i}].lp=this.value;
+prepocet${nazevPole.charAt(0).toUpperCase()+nazevPole.slice(1)}();
+">
+</td>
+
+<td>
+<input
+value="${d.pp}"
+onchange="
+${nazevPole}[${i}].pp=this.value;
+prepocet${nazevPole.charAt(0).toUpperCase()+nazevPole.slice(1)}();
+">
+</td>
+
+<td>${d.vysledek}</td>
+
+<td>
+<input
+type="checkbox"
+${d.np ? "checked" : ""}
+onchange="
+${nazevPole}[${i}].np=this.checked;
+prepocet${nazevPole.charAt(0).toUpperCase()+nazevPole.slice(1)}();
+">
+</td>
+
+<td>
+<button onclick="
+${nazevPole}.splice(${i},1);
+vykresli${nazevPole.charAt(0).toUpperCase()+nazevPole.slice(1)}();
+">
+🗑️
+</button>
+</td>
+
+</tr>
+`;
+
+});
+
+html+="</table>";
+
+document.getElementById(obsahId).innerHTML=html;
+
+}
+
+function vykresliMuzi(){
+vykresliTabulku(muzi,"muziObsah","muzi");
+}
+
+function vykresliZeny(){
+vykresliTabulku(zeny,"zenyObsah","zeny");
+}
+
+function vykresliVeterani(){
+vykresliTabulku(veterani,"veteraniObsah","veterani");
+}
+
+async function ulozOnline(){
+
+await setDoc(
+doc(db,"Dospeli","Dospeli"),
+{
+muzi,
+zeny,
+veterani,
+nazev:
+document.getElementById("nazevSouteze").value,
+datum:
+document.getElementById("datumSouteze").value,
+cas:new Date().toISOString()
+}
+);
+
+alert("Výsledky uloženy online");
+
+}
+
+showPage("muzi");
+
+</script>
 </body>
-</html>
+</html> 
