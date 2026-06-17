@@ -128,10 +128,6 @@ function vytvorTabulku(data, elementId) {
   let html = "<table>";
   html += "<tr>";
 
-  Object.keys(data[0]).forEach(sloupec => {
-    html += `<th>${sloupec}</th>`;
-  });
-
   const sloupce = ["start","poradi","druzstvo","lp","pp","vysledek","np"];
 
 html += "<tr>";
