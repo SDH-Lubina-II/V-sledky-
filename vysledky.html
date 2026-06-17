@@ -132,13 +132,21 @@ function vytvorTabulku(data, elementId) {
     html += `<th>${sloupec}</th>`;
   });
 
-  html += "</tr>";
+  const sloupce = ["start","poradi","druzstvo","lp","pp","vysledek","np"];
 
-  data.forEach(radek => {
+html += "<tr>";
+
+sloupce.forEach(sloupec => {
+    html += `<th>${sloupec}</th>`;
+});
+
+html += "</tr>";
+
+data.forEach(radek => {
     html += "<tr>";
 
-    Object.values(radek).forEach(hodnota => {
-      html += `<td>${hodnota}</td>`;
+    sloupce.forEach(sloupec => {
+        html += `<td>${radek[sloupec] ?? ""}</td>`;
     });
 
     html += "</tr>";
