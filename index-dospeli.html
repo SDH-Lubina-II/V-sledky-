@@ -507,8 +507,34 @@ cas:new Date().toISOString()
 alert("Výsledky uloženy online");
 
 }
+async function nactiOnline(){
 
+const docRef = doc(db,"Dospeli","Dospeli");
+const snap = await getDoc(docRef);
+
+if(snap.exists()){
+
+const data = snap.data();
+
+muzi = data.muzi || [];
+zeny = data.zeny || [];
+veterani = data.veterani || [];
+
+document.getElementById("nazevSouteze").value =
+data.nazev || "";
+
+document.getElementById("datumSouteze").value =
+data.datum || "";
+
+vykresliMuzi();
+vykresliZeny();
+vykresliVeterani();
+
+}
+
+}
 showPage("muzi");
+nactiOnline();
 
 </script>
 </body>
