@@ -124,11 +124,15 @@ function vytvorTabulku(data, elementId) {
     document.getElementById(elementId).innerHTML = "Žádná data";
     return;
   }
-
+data.sort((a, b) => {
+    const pa = parseInt(a.poradi) || 999;
+    const pb = parseInt(b.poradi) || 999;
+    return pa - pb;
+});
   let html = "<table>";
   html += "<tr>";
 
-  const sloupce = ["start","poradi","druzstvo","lp","pp","vysledek","np"];
+  const sloupce = ["poradi","druzstvo","lp","pp","vysledek","np"];
 
 sloupce.forEach(sloupec => {
     html += `<th>${sloupec}</th>`;
