@@ -557,24 +557,6 @@ JSON.stringify(data)
 
 }
 
-  function nactiLokalne(){
-
-const ulozenaData =
-localStorage.getItem("DOSPELI_VYSLEDKY");
-
-if(!ulozenaData) return;
-
-if(confirm(
-"Nalezena lokální záloha. Obnovit data?"
-)){
-
-const data =
-JSON.parse(ulozenaData);
-
-muzi = data.muzi || [];
-zeny = data.zeny || [];
-veterani = data.veterani || [];
-
 document.getElementById("nazevSouteze").value =
 data.nazev || "";
 
@@ -590,7 +572,6 @@ vykresliVeterani();
   }
 
 showPage("muzi");
-nactiLokalne();
 nactiOnline();
   
 </script>
