@@ -44,19 +44,46 @@ th{
 <body>
 
 <h1>Průběžné výsledky</h1>
+  <div style="text-align:center;margin-bottom:20px;">
+
+<button onclick="showTab('spu')">
+🚒 Starší PU
+</button>
+
+<button onclick="showTab('mpu')">
+🚒 Mladší PU
+</button>
+
+<button onclick="showTab('ssd')">
+🏃 Starší SD
+</button>
+
+<button onclick="showTab('msd')">
+🏃 Mladší SD
+</button>
+
+  </div>
 
 <h2>Data ze závodu</h2>
+<div id="spuBox">
 <h2>Starší - Požární útok</h2>
 <div id="spu"></div>
+</div>
 
+<div id="mpuBox">
 <h2>Mladší - Požární útok</h2>
 <div id="mpu"></div>
+</div>
 
+<div id="ssdBox">
 <h2>Starší - Štafeta dvojic</h2>
 <div id="ssd"></div>
+</div>
 
+<div id="msdBox">
 <h2>Mladší - Štafeta dvojic</h2>
 <div id="msd"></div>
+</div>
 
 <script type="module">
 
@@ -124,6 +151,17 @@ async function nactiData() {
 
 nactiData();
 
+ showTab("spu");
+
+function showTab(tab){
+
+document.getElementById("spuBox").style.display = "none";
+document.getElementById("mpuBox").style.display = "none";
+document.getElementById("ssdBox").style.display = "none";
+document.getElementById("msdBox").style.display = "none";
+
+document.getElementById(tab + "Box").style.display = "block";
+} 
 </script>
 
 </body>
