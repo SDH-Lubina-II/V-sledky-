@@ -36,7 +36,8 @@ await getDoc(
 doc(db,"zavody","hlavni")
 );
 
-console.log(snap.data());
+document.getElementById("spu").innerHTML =
+JSON.stringify(snap.data());;
 
 }
 
