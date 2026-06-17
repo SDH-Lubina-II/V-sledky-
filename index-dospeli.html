@@ -192,7 +192,24 @@ document.getElementById(id+"_tabulka").innerHTML=html;
 vytvorTabulku("Muži","muzi");
 vytvorTabulku("Ženy","zeny");
 vytvorTabulku("Veteráni 35+","veterani");
-  
+
+async function ulozit() {
+
+  const data = {
+    nazev: document.getElementById("nazev").value,
+    datum: document.getElementById("datum").value,
+    muzi: [],
+    zeny: [],
+    veterani: []
+  };
+
+  await setDoc(
+    doc(db, "Dospeli", "Dospeli"),
+    data
+  );
+
+  alert("Uloženo");
+}    
 </script>
 </body>
 </html>
