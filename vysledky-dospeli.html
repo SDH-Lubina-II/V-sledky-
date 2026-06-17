@@ -1,1 +1,259 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Průběžné výsledky</title>
+
+<style>
+
+body{
+font-family:Arial,sans-serif;
+margin:20px;
+background:#f5f5f5;
+}
+
+h1{
+text-align:center;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+margin-bottom:20px;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:6px;
+text-align:center;
+}
+
+th{
+background:#eaeaea;
+}
+
+button{
+font-size:20px;
+padding:12px 20px;
+border-radius:10px;
+margin:5px;
+}
+
+h3{
+margin-bottom:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Průběžné výsledky</h1>
+
+<div style="display:flex;justify-content:center;gap:40px;flex-wrap:wrap;">
+
+<div style="text-align:center;">
+
+<h3>🚒 Dospělí</h3>
+
+<button onclick="showTab('muzi')">
+🚒 Muži
+</button>
+
+<br><br>
+
+<button onclick="showTab('zeny')">
+🚒 Ženy
+</button>
+
+<br><br>
+
+<button onclick="showTab('veterani')">
+🏆 Veteráni 35+
+</button>
+
+</div>
+
+</div>
+
+<h2>Data ze závodu</h2>
+
+<div id="muziBox" style="display:none;">
+<h2>Muži</h2>
+<div id="muzi"></div>
+</div>
+
+<div id="zenyBox" style="display:none;">
+<h2>Ženy</h2>
+<div id="zeny"></div>
+</div>
+
+<div id="veteraniBox" style="display:none;">
+<h2>Veteráni 35+</h2>
+<div id="veterani"></div>
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getFirestore,
+doc,
+getDoc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyBnHKiL6ANjvRbUpd3sv4TwGuq7-4_c6J8",
+authDomain: "zkouska-2.firebaseapp.com",
+projectId: "zkouska-2",
+storageBucket: "zkouska-2.firebasestorage.app",
+messagingSenderId: "51239007198",
+appId: "1:51239007198:web:4e98cdfd91279a337da34f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.db = db;
+window.doc = doc;
+window.getDoc = getDoc;
+
+</script>
+
+<script>
+  function vytvorTabulku(data, elementId) {
+
+if (!data || data.length === 0) {
+
+document.getElementById(elementId).innerHTML =
+"Žádná data";
+
+return;
+
+}
+
+data.sort((a,b)=>{
+
+const pa = parseInt(a.poradi) || 999;
+const pb = parseInt(b.poradi) || 999;
+
+return pa-pb;
+
+});
+
+let html = "<table>";
+
+html += `
+<tr>
+<th>Pořadí</th>
+<th>Družstvo</th>
+<th>LP</th>
+<th>PP</th>
+<th>Výsledek</th>
+<th>Pokus</th>
+</tr>
+`;
+
+data.forEach(radek=>{
+
+let styl="";
+
+if(radek.poradi==1){
+
+styl=' style="background:#ffd700;font-weight:bold;"';
+
+}else if(radek.poradi==2){
+
+styl=' style="background:#c0c0c0;font-weight:bold;"';
+
+}else if(radek.poradi==3){
+
+styl=' style="background:#cd7f32;font-weight:bold;"';
+
+}
+
+html += `<tr${styl}>`;
+
+let poradi = radek.poradi;
+
+if(poradi==1) poradi="🥇";
+else if(poradi==2) poradi="🥈";
+else if(poradi==3) poradi="🥉";
+
+html += `<td>${poradi || ""}</td>`;
+
+html += `<td>${radek.druzstvo || ""}</td>`;
+
+html += `<td>${radek.lp || ""}</td>`;
+
+html += `<td>${radek.pp || ""}</td>`;
+
+html += `<td>${radek.vysledek || ""}</td>`;
+
+if(radek.np===true){
+
+html += `<td style="font-size:24px;">🔴</td>`;
+
+}else{
+
+html += `<td style="font-size:24px;">🟢</td>`;
+
+}
+
+html += "</tr>";
+
+});
+
+html += "</table>";
+
+document.getElementById(elementId).innerHTML = html;
+
+  }
+  
+async function nactiData() {
+
+const snap = await getDoc(
+doc(db,"Dospeli","Dospeli")
+);
+
+if(!snap.exists()) return;
+
+const data = snap.data();
+
+vytvorTabulku(data.muzi,"muzi");
+vytvorTabulku(data.zeny,"zeny");
+vytvorTabulku(data.veterani,"veterani");
+
+}
+
+nactiData();
+
+setInterval(
+nactiData,
+15000
+);
+
+function showTab(tab){
+
+document.getElementById("muziBox").style.display="none";
+document.getElementById("zenyBox").style.display="none";
+document.getElementById("veteraniBox").style.display="none";
+
+document.getElementById(tab+"Box").style.display="block";
+
+}
+
+window.showTab = showTab;
+
+showTab("muzi");
+
+</script>
+
+</body>
+</html>
