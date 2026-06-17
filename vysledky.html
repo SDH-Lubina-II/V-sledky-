@@ -7,6 +7,42 @@
 
 <style>
 
+  <script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+import {
+getFirestore,
+doc,
+getDoc
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyBnHKiL6ANjvRbUpd3sv4TwGuq7-4_c6J8",
+authDomain: "zkouska-2.firebaseapp.com",
+projectId: "zkouska-2",
+storageBucket: "zkouska-2.firebasestorage.app",
+messagingSenderId: "51239007198",
+appId: "1:51239007198:web:4e98cdfd91279a337da34f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function nactiData(){
+
+const snap =
+await getDoc(
+doc(db,"zavody","hlavni")
+);
+
+console.log(snap.data());
+
+}
+
+nactiData();
+
+</script>
 body{
 font-family:Arial,sans-serif;
 margin:20px;
