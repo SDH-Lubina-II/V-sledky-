@@ -144,7 +144,15 @@ data.forEach(radek => {
     html += "<tr>";
 
     sloupce.forEach(sloupec => {
-        html += `<td>${radek[sloupec] ?? ""}</td>`;
+        if (sloupec === "np") {
+    if (radek[sloupec] === true) {
+        html += `<td style="font-size:24px;">🔴</td>`;;
+    } else {
+        html += `<td style="font-size:24px;">🟢</td>`;;
+    }
+} else {
+    html += `<td>${radek[sloupec] ?? ""}</td>`;
+}
     });
 
     html += "</tr>";
